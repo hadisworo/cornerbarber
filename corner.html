@@ -1,0 +1,587 @@
+
+
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Corner Barbershop</title>
+
+  <!-- Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    :root { --brand:#111827; --accent:#f59e0b; }
+    body { background: #0b1220; }
+    .bg-hero {
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(245,158,11,.18), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(59,130,246,.15), transparent 55%),
+        linear-gradient(180deg, #0b1220, #0b1220);
+    }
+    .glass {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+    }
+    .hero-title { letter-spacing: .4px; }
+    .badge-open { background: rgba(34,197,94,.15); color: #86efac; border: 1px solid rgba(34,197,94,.25); }
+    .badge-closed { background: rgba(239,68,68,.12); color: #fecaca; border: 1px solid rgba(239,68,68,.25); }
+    .btn-accent { background: var(--accent); border-color: var(--accent); color: #111; font-weight: 600; }
+    .btn-accent:hover { filter: brightness(.95); }
+    .star { color: #fbbf24; }
+    .muted { color: rgba(255,255,255,.75); }
+    .section-title { color: #fff; }
+    .text-soft { color: rgba(255,255,255,.85); }
+    .gallery img { border-radius: 14px; object-fit: cover; height: 160px; width: 100%; }
+    @media (min-width: 992px) { .gallery img { height: 190px; } }
+    .review-card { border-radius: 16px; }
+    .map-embed { border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,.10); }
+    .small-link { color: rgba(255,255,255,.8); text-decoration: none; }
+    .small-link:hover { color: #fff; text-decoration: underline; }
+    .navbar-brand span { color: var(--accent); }
+  </style>
+</head>
+
+<body class="text-white bg-hero">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark py-3">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#top">Corner <span>Barber</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ms-auto gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="#info">Informasi</a></li>
+          <li class="nav-item"><a class="nav-link" href="#gallery">Foto</a></li>
+          <li class="nav-item"><a class="nav-link" href="#reviews">Ulasan</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Kontak</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header id="top" class="container pb-4">
+    <div class="glass p-4 p-lg-5">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span id="openBadge" class="badge rounded-pill px-3 py-2"></span>
+            <span class="muted" id="closeText"></span>
+          </div>
+
+          <h1 class="hero-title display-5 fw-bold mb-2" id="name"></h1>
+
+          <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+            <div class="d-flex align-items-center gap-2">
+              <div id="stars" class="d-flex gap-1"></div>
+              <div class="text-soft">
+                <span class="fw-semibold" id="rating"></span>
+                <span class="muted">(<span id="reviewCount"></span>)</span>
+              </div>
+            </div>
+            <div class="muted">
+              <i class="bi bi-geo-alt"></i>
+              <span id="city"></span>
+            </div>
+            <div class="muted">
+              <i class="bi bi-camera"></i>
+              <span id="photoCount"></span>
+            </div>
+          </div>
+
+          <p class="text-soft mb-4" id="tagline"></p>
+
+          <!-- Quick Actions -->
+          <div class="d-flex flex-wrap gap-2">
+            <a id="btnRoute" class="btn btn-accent"><i class="bi bi-signpost-2 me-1"></i>Rute</a>
+            <button id="btnSave" class="btn btn-outline-light"><i class="bi bi-bookmark me-1"></i>Simpan</button>
+            <button id="btnShare" class="btn btn-outline-light"><i class="bi bi-share me-1"></i>Bagikan</button>
+            <a id="btnCall" class="btn btn-outline-light"><i class="bi bi-telephone me-1"></i>Telepon</a>
+          </div>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="map-embed">
+            <iframe id="mapFrame"
+              width="100%" height="320" style="border:0" loading="lazy" allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <small class="muted">Area pelayanan: <span id="serviceArea"></span></small>
+            <small class="muted"><span id="province"></span></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Info -->
+  <section id="info" class="container py-4">
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="glass p-4">
+          <h2 class="section-title h4 fw-bold mb-3">Informasi Umum</h2>
+
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="d-flex gap-3">
+                <div class="fs-4"><i class="bi bi-geo-fill"></i></div>
+                <div>
+                  <div class="fw-semibold">Alamat</div>
+                  <div class="text-soft" id="address"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="d-flex gap-3">
+                <div class="fs-4"><i class="bi bi-clock-fill"></i></div>
+                <div>
+                  <div class="fw-semibold">Jam Operasional</div>
+                  <div class="text-soft" id="hoursText"></div>
+                  <small class="muted d-block mt-1">Catatan: sesuaikan jam buka di data jika berbeda.</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="d-flex gap-3">
+                <div class="fs-4"><i class="bi bi-telephone-fill"></i></div>
+                <div>
+                  <div class="fw-semibold">Telepon</div>
+                  <div class="text-soft"><a class="small-link" id="phoneLink"></a></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="d-flex gap-3">
+                <div class="fs-4"><i class="bi bi-pin-map-fill"></i></div>
+                <div>
+                  <div class="fw-semibold">Area Pelayanan</div>
+                  <div class="text-soft" id="serviceArea2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="glass p-4">
+          <h2 class="section-title h4 fw-bold mb-3">Layanan Populer</h2>
+          <div class="row g-2" id="services"></div>
+
+          <hr class="border border-white border-opacity-10 my-4">
+
+          <h3 class="h6 fw-bold mb-2">Pesan via WhatsApp</h3>
+          <p class="muted mb-3">Klik tombol di bawah untuk langsung chat (template pesan otomatis).</p>
+          <a id="btnWA" class="btn btn-outline-light w-100">
+            <i class="bi bi-whatsapp me-2"></i>Chat WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section id="gallery" class="container py-4">
+    <div class="d-flex align-items-end justify-content-between mb-3">
+      <div>
+        <h2 class="section-title h4 fw-bold mb-1">Foto</h2>
+        <div class="muted">Cuplikan foto (bisa diganti dengan foto asli).</div>
+      </div>
+      <button class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#allPhotosModal">
+        Lihat semua
+      </button>
+    </div>
+
+    <div class="row g-3 gallery" id="galleryGrid"></div>
+  </section>
+
+  <!-- Reviews -->
+  <section id="reviews" class="container py-4">
+    <div class="glass p-4">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+        <div>
+          <h2 class="section-title h4 fw-bold mb-1">Ulasan</h2>
+          <div class="muted">Ringkasan dari pelanggan.</div>
+        </div>
+        <div class="text-soft">
+          <span class="fw-semibold" id="rating2"></span>
+          <span class="muted">/ 5 • <span id="reviewCount2"></span> ulasan</span>
+        </div>
+      </div>
+
+      <div class="row g-3" id="reviewList"></div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="container py-4 pb-5">
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="glass p-4">
+          <h2 class="section-title h4 fw-bold mb-3">Kontak</h2>
+          <div class="text-soft mb-2"><i class="bi bi-geo-alt me-2"></i><span id="address2"></span></div>
+          <div class="text-soft mb-2"><i class="bi bi-telephone me-2"></i><a class="small-link" id="phoneLink2"></a></div>
+          <div class="text-soft"><i class="bi bi-clock me-2"></i><span id="hoursText2"></span></div>
+
+          <hr class="border border-white border-opacity-10 my-4">
+
+          <div class="d-flex flex-wrap gap-2">
+            <a id="btnRoute2" class="btn btn-accent flex-grow-1"><i class="bi bi-signpost-2 me-1"></i>Rute</a>
+            <a id="btnCall2" class="btn btn-outline-light flex-grow-1"><i class="bi bi-telephone me-1"></i>Telepon</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="glass p-4">
+          <h2 class="section-title h4 fw-bold mb-3">Kirim Pesan Cepat</h2>
+
+          <form id="quickForm" class="row g-3" novalidate>
+            <div class="col-md-6">
+              <label class="form-label">Nama</label>
+              <input type="text" class="form-control" id="qName" required>
+              <div class="invalid-feedback">Nama wajib diisi.</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">No. WhatsApp</label>
+              <input type="tel" class="form-control" id="qPhone" placeholder="08xxxxxxxxxx" required>
+              <div class="invalid-feedback">No. WA wajib diisi.</div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Pesan</label>
+              <textarea class="form-control" id="qMsg" rows="4" required>Halo Corner Barbershop, saya ingin booking potong rambut.</textarea>
+              <div class="invalid-feedback">Pesan wajib diisi.</div>
+            </div>
+            <div class="col-12 d-grid">
+              <button class="btn btn-accent" type="submit">
+                <i class="bi bi-send me-2"></i>Kirim via WhatsApp
+              </button>
+              <small class="muted mt-2">Pesan akan diarahkan ke WhatsApp (tanpa menyimpan data di server).</small>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <footer class="container mt-5">
+      <div class="text-center muted">
+        © <span id="year"></span> Corner Barbershop • Dibuat responsive & dinamis
+      </div>
+    </footer>
+  </section>
+
+  <!-- Toast -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1080">
+    <div id="appToast" class="toast text-bg-dark border border-white border-opacity-10" role="alert">
+      <div class="d-flex">
+        <div class="toast-body" id="toastText">Tersimpan.</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Photos Modal -->
+  <div class="modal fade" id="allPhotosModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content bg-dark text-white border border-white border-opacity-10">
+        <div class="modal-header border-0">
+          <h5 class="modal-title">Galeri Foto</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3 gallery" id="galleryAll"></div>
+          <div class="muted mt-3">Tip: ganti URL foto di data untuk pakai foto asli.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // =========================
+    // DATA (UBAH DI SINI)
+    // =========================
+    const BARBER_DATA = {
+      name: "Corner Barbershop",
+      rating: 4.6,
+      reviewCount: 25,
+      category: "Salon rambut di Jakarta Pusat",
+      photoCountText: "24+ Foto",
+      city: "Jakarta Pusat",
+      address: "Jl. Pangkalan Asem No.1 5, RT.5/RW.2, Cemp. Putih Bar., Kec. Cemp. Putih, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10520",
+      serviceArea: "Kecamatan Cempaka Putih dan area di sekitarnya",
+      closeAt: "22:00",     // sesuai info: tutup pukul 22.00
+      openAt: "10:00",      // default (silakan ubah jika jam buka berbeda)
+      phone: "0858-8811-3119",
+      province: "Daerah Khusus Ibukota Jakarta",
+      services: [
+        { title: "Haircut", desc: "Potong rambut rapi & modern" },
+        { title: "Fade / Taper", desc: "Model fade sesuai request" },
+        { title: "Beard Trim", desc: "Rapikan jenggot & kumis" },
+        { title: "Hair Wash", desc: "Cuci rambut + styling" },
+      ],
+      // Ganti dengan foto asli (URL) bila ada
+      photos: [
+        "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1512690459411-b9245aed614b?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1521498542256-5aeb47ba2b36?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1536520002442-39764a41e987?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1520975958225-5b9968a9f59b?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1520975682071-a5ff93b6b87b?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1520975661595-6453be3f7070?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1517832207067-4db24a2ae47c?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=70",
+        "https://images.unsplash.com/photo-1520975916090-3105956dac38?auto=format&fit=crop&w=1200&q=70",
+      ],
+      reviews: [
+        { name: "Rizky", stars: 5, text: "Tempat nyaman, potongannya rapi. Barbernya komunikatif." },
+        { name: "Dimas", stars: 4, text: "Pelayanan oke, antriannya lumayan pas weekend." },
+        { name: "Aldi", stars: 5, text: "Fade-nya bagus, hasil sesuai request. Recommended!" },
+      ],
+    };
+
+    // =========================
+    // HELPERS
+    // =========================
+    const $ = (id) => document.getElementById(id);
+
+    function toMinutes(hhmm) {
+      const [h, m] = hhmm.split(":").map(Number);
+      return (h * 60) + m;
+    }
+
+    function getJakartaNowMinutes() {
+      const now = new Date();
+      // gunakan waktu lokal browser; untuk mayoritas user Indo ini sudah WIB.
+      return now.getHours() * 60 + now.getMinutes();
+    }
+
+    function setOpenBadge() {
+      const nowMin = getJakartaNowMinutes();
+      const openMin = toMinutes(BARBER_DATA.openAt);
+      const closeMin = toMinutes(BARBER_DATA.closeAt);
+
+      const open = (nowMin >= openMin && nowMin < closeMin);
+      const badge = $("openBadge");
+      const closeText = $("closeText");
+
+      if (open) {
+        badge.className = "badge badge-open rounded-pill px-3 py-2";
+        badge.textContent = "Buka";
+        closeText.textContent = `Tutup pukul ${BARBER_DATA.closeAt}`;
+      } else {
+        badge.className = "badge badge-closed rounded-pill px-3 py-2";
+        badge.textContent = "Tutup";
+        closeText.textContent = `Buka pukul ${BARBER_DATA.openAt}`;
+      }
+    }
+
+    function renderStars(containerEl, value) {
+      containerEl.innerHTML = "";
+      const full = Math.floor(value);
+      const half = (value - full) >= 0.5;
+      const total = 5;
+
+      for (let i = 1; i <= total; i++) {
+        const iEl = document.createElement("i");
+        iEl.className = "bi star " + (i <= full ? "bi-star-fill" : (i === full + 1 && half ? "bi-star-half" : "bi-star"));
+        containerEl.appendChild(iEl);
+      }
+    }
+
+    function toast(msg) {
+      $("toastText").textContent = msg;
+      const t = new bootstrap.Toast($("appToast"), { delay: 2500 });
+      t.show();
+    }
+
+    // =========================
+    // INIT UI
+    // =========================
+    function init() {
+      $("name").textContent = BARBER_DATA.name;
+      $("rating").textContent = BARBER_DATA.rating.toFixed(1);
+      $("reviewCount").textContent = BARBER_DATA.reviewCount;
+      $("city").textContent = BARBER_DATA.category;
+      $("photoCount").textContent = BARBER_DATA.photoCountText;
+      $("tagline").textContent = `${BARBER_DATA.category}. Barber profesional, tempat nyaman, hasil rapi.`;
+
+      $("address").textContent = BARBER_DATA.address;
+      $("address2").textContent = BARBER_DATA.address;
+      $("serviceArea").textContent = BARBER_DATA.serviceArea;
+      $("serviceArea2").textContent = BARBER_DATA.serviceArea;
+      $("province").textContent = BARBER_DATA.province;
+
+      $("hoursText").textContent = `Buka · Tutup pukul ${BARBER_DATA.closeAt}`;
+      $("hoursText2").textContent = `Buka · Tutup pukul ${BARBER_DATA.closeAt}`;
+
+      $("phoneLink").textContent = BARBER_DATA.phone;
+      $("phoneLink2").textContent = BARBER_DATA.phone;
+      $("phoneLink").href = `tel:${BARBER_DATA.phone.replace(/[^0-9+]/g, "")}`;
+      $("phoneLink2").href = `tel:${BARBER_DATA.phone.replace(/[^0-9+]/g, "")}`;
+
+      // Stars
+      renderStars($("stars"), BARBER_DATA.rating);
+      $("rating2").textContent = BARBER_DATA.rating.toFixed(1);
+      $("reviewCount2").textContent = BARBER_DATA.reviewCount;
+
+      // Map embed (query by address)
+      const q = encodeURIComponent(BARBER_DATA.address);
+      $("mapFrame").src = `https://www.google.com/maps?q=${q}&output=embed`;
+
+      // Action buttons
+      const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
+      $("btnRoute").href = mapsUrl;
+      $("btnRoute2").href = mapsUrl;
+
+      const tel = `tel:${BARBER_DATA.phone.replace(/[^0-9+]/g, "")}`;
+      $("btnCall").href = tel;
+      $("btnCall2").href = tel;
+      $("btnCall").setAttribute("role", "button");
+      $("btnCall2").setAttribute("role", "button");
+
+      // WhatsApp
+      const waNumber = BARBER_DATA.phone.replace(/[^0-9]/g, "");
+      const waBase = `https://wa.me/62${waNumber.startsWith("0") ? waNumber.slice(1) : waNumber}`;
+      $("btnWA").href = `${waBase}?text=${encodeURIComponent("Halo Corner Barbershop, saya ingin booking potong rambut.")}`;
+
+      // Services
+      const servicesWrap = $("services");
+      servicesWrap.innerHTML = "";
+      BARBER_DATA.services.forEach(s => {
+        const col = document.createElement("div");
+        col.className = "col-12";
+        col.innerHTML = `
+          <div class="p-3 border border-white border-opacity-10 rounded-4">
+            <div class="fw-semibold">${s.title}</div>
+            <div class="muted">${s.desc}</div>
+          </div>
+        `;
+        servicesWrap.appendChild(col);
+      });
+
+      // Gallery (grid 8)
+      const grid = $("galleryGrid");
+      grid.innerHTML = "";
+      BARBER_DATA.photos.slice(0, 8).forEach((url, idx) => {
+        const col = document.createElement("div");
+        col.className = "col-6 col-lg-3";
+        col.innerHTML = `<img src="${url}" alt="Corner Barbershop photo ${idx+1}" loading="lazy">`;
+        grid.appendChild(col);
+      });
+
+      // Gallery all (modal)
+      const all = $("galleryAll");
+      all.innerHTML = "";
+      BARBER_DATA.photos.forEach((url, idx) => {
+        const col = document.createElement("div");
+        col.className = "col-6 col-lg-3";
+        col.innerHTML = `<img src="${url}" alt="Corner Barbershop photo ${idx+1}" loading="lazy">`;
+        all.appendChild(col);
+      });
+
+      // Reviews
+      const list = $("reviewList");
+      list.innerHTML = "";
+      BARBER_DATA.reviews.forEach(r => {
+        const col = document.createElement("div");
+        col.className = "col-12 col-lg-4";
+        const starsEl = Array.from({length:5}).map((_, i) =>
+          `<i class="bi ${i < r.stars ? "bi-star-fill" : "bi-star"} star"></i>`
+        ).join("");
+        col.innerHTML = `
+          <div class="p-3 p-lg-4 border border-white border-opacity-10 glass review-card h-100">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="fw-semibold">${r.name}</div>
+              <div class="d-flex gap-1">${starsEl}</div>
+            </div>
+            <div class="muted mt-2">${r.text}</div>
+          </div>
+        `;
+        list.appendChild(col);
+      });
+
+      // Save (localStorage)
+      const key = "corner_barber_saved";
+      const btnSave = $("btnSave");
+      const refreshSaveBtn = () => {
+        const saved = localStorage.getItem(key) === "1";
+        btnSave.innerHTML = saved
+          ? `<i class="bi bi-bookmark-fill me-1"></i>Tersimpan`
+          : `<i class="bi bi-bookmark me-1"></i>Simpan`;
+      };
+      refreshSaveBtn();
+
+      btnSave.addEventListener("click", () => {
+        const saved = localStorage.getItem(key) === "1";
+        localStorage.setItem(key, saved ? "0" : "1");
+        refreshSaveBtn();
+        toast(saved ? "Dihapus dari simpanan." : "Disimpan ke perangkat ini.");
+      });
+
+      // Share
+      $("btnShare").addEventListener("click", async () => {
+        const shareData = {
+          title: BARBER_DATA.name,
+          text: `${BARBER_DATA.name} • ${BARBER_DATA.category}\n${BARBER_DATA.address}\nTelp: ${BARBER_DATA.phone}`,
+          url: location.href
+        };
+        try {
+          if (navigator.share) {
+            await navigator.share(shareData);
+          } else {
+            await navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`);
+            toast("Link disalin ke clipboard.");
+          }
+        } catch {
+          toast("Gagal membagikan (dibatalkan).");
+        }
+      });
+
+      // Quick form -> WhatsApp
+      $("quickForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const form = e.currentTarget;
+        form.classList.add("was-validated");
+
+        const name = $("qName").value.trim();
+        const phone = $("qPhone").value.trim();
+        const msg = $("qMsg").value.trim();
+
+        if (!name || !phone || !msg) return;
+
+        const text = `Halo Corner Barbershop,\n\nNama: ${name}\nNo. WA: ${phone}\nPesan: ${msg}\n\nTerima kasih.`;
+        window.open(`${waBase}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+      });
+
+      // Year
+      $("year").textContent = new Date().getFullYear();
+
+      // Open/Closed badge
+      setOpenBadge();
+      // update every minute
+      setInterval(setOpenBadge, 60_000);
+    }
+
+    init();
+  </script>
+</body>
+</html>
+
